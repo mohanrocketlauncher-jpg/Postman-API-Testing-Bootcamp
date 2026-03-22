@@ -1,0 +1,282 @@
+{
+  "info": {
+    "_postman_id": "01ac362b-05f0-415b-9a63-06ac52601a3b",
+    "name": "API Bootcamp - Day 1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "20258140"
+  },
+  "item": [
+    {
+      "name": "https://postman-echo.com/get",
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{my_api_key}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://postman-echo.com/get?api_key={{my_api_key}}",
+          "protocol": "https",
+          "host": [
+            "postman-echo",
+            "com"
+          ],
+          "path": [
+            "get"
+          ],
+          "query": [
+            {
+              "key": "api_key",
+              "value": "{{my_api_key}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "https://httpbin.org/anything/:userid",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{my_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://httpbin.org/anything/:userid",
+          "protocol": "https",
+          "host": [
+            "httpbin",
+            "org"
+          ],
+          "path": [
+            "anything",
+            ":userid"
+          ],
+          "variable": [
+            {
+              "key": "userid",
+              "value": "member-99"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "https://httpbin.org/post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseData = pm.response.json();\r",
+              "const expectedName = pm.variables.get(\"variable_name\");\r",
+              "\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Check if Name matches\", function () {\r",
+              "    // We check if the response name equals our variable\r",
+              "    pm.expect(responseData.json.name).to.eql(expectedName);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// This creates the random name and saves it to a variable\r",
+              "const randomName = \"User_\" + Math.random().toString(36).substring(7);\r",
+              "pm.variables.set(\"variable_name\", randomName);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"{{variable_name}}\",\r\n    \"course\": \"Postman Intensive\",\r\n    \"day\": 1,\r\n    \"status\": \"learning\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://httpbin.org/post",
+          "protocol": "https",
+          "host": [
+            "httpbin",
+            "org"
+          ],
+          "path": [
+            "post"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "https://postman-echo.com/post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// 1. We create our own \"Data File\" right here for free\r",
+              "const userPool = [\r",
+              "    { \"user\": \"postman\", \"pass\": \"password\" },\r",
+              "    { \"user\": \"hacker\", \"pass\": \"wrong_pass\" },\r",
+              "    { \"user\": \"mohan\", \"pass\": \"secret123\" }\r",
+              "];\r",
+              "\r",
+              "// 2. We pick one randomly or just use the first one for now\r",
+              "let randomUser = userPool[Math.floor(Math.random() * userPool.length)];\r",
+              "\r",
+              "// 3. We set the variables manually so the Body can see them\r",
+              "pm.variables.set(\"username\", randomUser.user);\r",
+              "pm.variables.set(\"password\", randomUser.pass);\r",
+              "\r",
+              "console.log(\"Testing with User: \" + randomUser.user);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://postman-echo.com/post",
+          "protocol": "https",
+          "host": [
+            "postman-echo",
+            "com"
+          ],
+          "path": [
+            "post"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "https://postman-echo.com/basic-auth",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// We EXPECT a 401 because we sent a bad password\r",
+              "pm.test(\"Security Check: Access should be denied\", function () {\r",
+              "    pm.response.to.have.status(401);\r",
+              "});\r",
+              "\r",
+              "// We want to make sure the body says \"Unauthorized\"\r",
+              "pm.test(\"Error message is correct\", function () {\r",
+              "    pm.expect(pm.response.text()).to.include(\"Unauthorized\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "Hacker_123",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "{{last_logged_in_user}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://postman-echo.com/basic-auth",
+          "protocol": "https",
+          "host": [
+            "postman-echo",
+            "com"
+          ],
+          "path": [
+            "basic-auth"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
